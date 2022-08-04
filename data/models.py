@@ -80,7 +80,7 @@ class Rate (models.Model):
      subject=models.ForeignKey(Subject,on_delete=models.CASCADE,default=1)
      #presence
      presence=models.BooleanField()
-     date=models.DateField( null=True, blank=True, default='2020-10-10')
+     date=models.DateTimeField( null=True, blank=True, default='2020-10-10')
      #basic rate
      attention=models.IntegerField(choices=rate_value,blank=True)
      behavior=models.IntegerField(choices=rate_value,blank=True)

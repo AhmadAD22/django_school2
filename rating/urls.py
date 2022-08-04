@@ -1,5 +1,8 @@
-from django.urls import path,include
+from django.urls import path,include,register_converter
 from .views import Rating,AddRate,GetRate
+from .converters import DateConverter
+
+register_converter(DateConverter, 'date')
 
 urlpatterns = [
     #Show all subjects for spicefic teacher
@@ -10,6 +13,9 @@ urlpatterns = [
     #get rating
      #get student's subjects by id
       path('get/<int:pk>',GetRate.as_view({'get':'getsubjects'})),
+      path('get/<int:pk>/<int:pk1>',GetRate.as_view({'get':'getrate'})),
+      path('get/<int:pk>/<int:pk1>/<date:mydate>',GetRate.as_view({'get':'getrate2'})),
+       path('get/<int:pk>/<int:pk1>/<date:mydate>/weekly',GetRate.as_view({'get':'getrate3'})),
      
      #default get
     path('api/listsubjectsteacher/<int:pk>',Rating.as_view({'get':'SubjectsTeacher'})),

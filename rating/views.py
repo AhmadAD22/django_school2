@@ -9,6 +9,8 @@ from rest_framework.viewsets import ViewSet, ModelViewSet,GenericViewSet
 from rest_framework import mixins
 from data.models import Rate, Student, Subject,Teacher,Teach,Learn
 from .serializers import RateSerializer,AddRateSerializer
+import datetime as DT
+from .weekly import avg
 
 
 class Rating (GenericViewSet):
@@ -59,7 +61,7 @@ class AddRate (GenericViewSet,mixins.CreateModelMixin):
 
 
 class GetRate (GenericViewSet):
-     queryset=Teach.objects.all()
+     queryset=Rate.objects.all()
      
      def getsubjects(self,request,pk):
            subjects=[{
@@ -69,12 +71,18 @@ class GetRate (GenericViewSet):
                   for student in Learn.objects.filter(student=pk)]
            return Response(subjects)
     
-    #  def getrate(self,request,pk,pk1):
-         
-    #     subjects=[{
-    #                 'subject_id':student.subject.id,
-    #                 'subject_name':student.subject.sub_name,
-    #                }
-    #               for student in Learn.objects.filter(student=pk)]
-    #     return Response(subjects)
-    
+     def getrate(self,request,pk,pk1):
+        rates=Rate.objects.filter(student=pk,subject=pk1)
+        serializer=RateSerializer(rates,many=True)
+        return Response(serializer.data)
+     def getrate2(self,request,pk,pk1,mydate):
+        rates=Rate.objects.filter(student=pk,subject=pk1,date=mydate)
+        serializer=RateSerializer(rates,many=True)
+        return Response(serializer.data)
+     def getrate3(self,request,pk,pk1,mydate):
+        week_ago = mydate - DT.timedelta(days=7)
+        rates=Rate.objects.filter(date__range=[week_ago,mydate])
+        avg_rates=avg(rates)
+        # serializer=RateSerializer(avg_rates,many=True)
+        # return Response(serializer.data)
+        return Response(avg_rates)
