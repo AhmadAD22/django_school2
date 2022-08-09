@@ -24,6 +24,7 @@ from data.views import StudentViewset,TeachertViewset,RateViewset
 urlpatterns = [
      path('data/', include('data.urls')),
       path('rating/', include('rating.urls')),
+      path('posts/', include('posts.urls')),
      path('auth/', include('school_app.urls')),
     path('admin/', admin.site.urls),
 ]

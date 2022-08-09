@@ -12,7 +12,7 @@ from rest_framework import authentication, permissions,generics
 from django.contrib.auth.models import User
 from data.models import Student,Teacher
 from rest_framework.viewsets import ViewSet, ModelViewSet,GenericViewSet
-from .serializers import CraeteUserSerializer
+from .serializers import CraeteUserSerializer, UserSerializer
 
 
 
@@ -38,6 +38,25 @@ class CreateUser(mixins.CreateModelMixin,GenericViewSet):
         new_teacer.save()
         new_user.save()
         return Response(new_user.pk)
+    
+    
+class DetaledUserMixins(mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
+    
+        queryset=User.objects.all()
+        serializer_class=UserSerializer
+    
+        def get (self,request,*args,**kwargs):
+             return self.retrieve(request,*args,**kwargs)
+        def put (self,request,*args,**kwargs):
+             return self.update(request,*args,**kwargs)
+        def delete (self,request,*args,**kwargs):
+             return self.destroy(request,*args,**kwargs)
+    
+    
 class ListUsers(APIView):
     """
     View to list all users in the system.
@@ -53,8 +72,8 @@ class ListUsers(APIView):
         Return a list of all users.
         """
         if request.user.is_superuser:
-        #     usernames = [user.username for user in User.objects.all()]
-            return Response('1')
+            # usernames = [user.username for user in User.objects.all()]
+            return Response("ad")
     
         else:
             # students=[student.last_name for student in Student.objects.all()]

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     #New apps
      'school_app',
      'data',
+     'rating',
+     'posts',
     # CORS
     'corsheaders',
     #rest_framework

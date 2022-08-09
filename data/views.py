@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ViewSet, ModelViewSet,GenericViewSet
 from .models import Student,Teacher,Rate,Subject
-from rest_framework import authentication
+from rest_framework import authentication, generics
 from .serializers import StudentSerializer,TeacherSerializer,RateSerializer
 from .serializers import SubjectSerializer
 
@@ -25,6 +25,22 @@ class SubjectViewset(mixins.CreateModelMixin,GenericViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+class DetaledSubjectMixins(mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
+    
+        queryset=Subject.objects.all()
+        serializer_class=SubjectSerializer
+    
+        def get (self,request,*args,**kwargs):
+             return self.retrieve(request,*args,**kwargs)
+        def put (self,request,*args,**kwargs):
+             return self.update(request,*args,**kwargs)
+        def delete (self,request,*args,**kwargs):
+             return self.destroy(request,*args,**kwargs)
+    
 
 #All student information
 class StudentViewset(mixins.CreateModelMixin,GenericViewSet):
@@ -40,6 +56,23 @@ class StudentViewset(mixins.CreateModelMixin,GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+class DetaledStudentMixins(mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
+    
+        queryset=Student.objects.all()
+        serializer_class=StudentSerializer
+    
+        def get (self,request,*args,**kwargs):
+             return self.retrieve(request,*args,**kwargs)
+        def put (self,request,*args,**kwargs):
+             return self.update(request,*args,**kwargs)
+        def delete (self,request,*args,**kwargs):
+             return self.destroy(request,*args,**kwargs)
+    
     
     
 # All TEACHER INFORMATION
@@ -71,6 +104,23 @@ class TeachertViewset(mixins.CreateModelMixin,GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class DetaledTeacherMixins(mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
+    
+        queryset=Teacher.objects.all()
+        serializer_class=TeacherSerializer
+    
+        def get (self,request,*args,**kwargs):
+             return self.retrieve(request,*args,**kwargs)
+        def put (self,request,*args,**kwargs):
+             return self.update(request,*args,**kwargs)
+        def delete (self,request,*args,**kwargs):
+             return self.destroy(request,*args,**kwargs)
 
 #Rate Information
 class RateViewset(mixins.CreateModelMixin,GenericViewSet):

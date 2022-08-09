@@ -15,8 +15,8 @@ urlpatterns = [
       path('get/<int:pk>',GetRate.as_view({'get':'getsubjects'})),
       path('get/<int:pk>/<int:pk1>',GetRate.as_view({'get':'getrate'})),
       path('get/<int:pk>/<int:pk1>/<date:mydate>',GetRate.as_view({'get':'getrate2'})),
-       path('get/<int:pk>/<int:pk1>/<date:mydate>/weekly',GetRate.as_view({'get':'getrate3'})),
-     
+       path('get/<int:pk>/<int:pk1>/<date:mydate>/weekly',GetRate.as_view({'get':'getweeklyrate'})),
+     path('get/<int:pk>/<int:pk1>/<date:mydate>/monthly',GetRate.as_view({'get':'getmonthlyrate'})),
      #default get
     path('api/listsubjectsteacher/<int:pk>',Rating.as_view({'get':'SubjectsTeacher'})),
     path('api/liststudentssubject/<int:pk>',Rating.as_view({'get':'liststudent'})),

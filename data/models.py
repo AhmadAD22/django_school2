@@ -42,7 +42,7 @@ class Declirations(models.Model):
      teacher_publish_it=models.ForeignKey(Teacher,on_delete=models.CASCADE)
      title=models.CharField(max_length=5000)
      body_text=models.TextField()   
-     body_img=models.ImageField()
+     body_img=models.ImageField(blank=True)
      date=models.DateField()
 
      
@@ -67,14 +67,7 @@ class Learn (models.Model):
      
 #Rate table for evry day we will take data from it to monthly rate
 class Rate (models.Model):
-     rate_value=(
-          (1,'Bad'),
-          (2,'Medieum'),
-          (3,'Good'),
-          (4,'Very Good'),
-          (5,'Excellent'),       
-     )
-  
+     rate_value=((1,'Bad'), (2,'Medieum'), (3,'Good'), (4,'Very Good'),(5,'Excellent'), )
      teacher=models.ForeignKey(Teacher,on_delete=models.CASCADE)
      student=models.ForeignKey(Student,on_delete=models.CASCADE)
      subject=models.ForeignKey(Subject,on_delete=models.CASCADE,default=1)
