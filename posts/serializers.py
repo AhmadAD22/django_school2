@@ -5,3 +5,4 @@ class PostsSerializer(serializers.ModelSerializer):
     class Meta:
         model =Declirations
         fields ='__all__'
+        # ['title','body_text','date']

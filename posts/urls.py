@@ -1,10 +1,12 @@
 import imp
 from django.urls import path
-from .views import ListPostsMixins,DetaledPostMixins
+from .views import ListPostsMixins,DetaledPostMixins,CustomCreate
 
 
 urlpatterns = [
-    path('mixinpath',ListPostsMixins.as_view(),name='mp'),
-    path('postmixin/<int:pk>',DetaledPostMixins.as_view(),name='mdp')
-    
+    path('',ListPostsMixins.as_view(),name='mp'),
+    path('postud/<int:pk>',DetaledPostMixins.as_view(),name='mdp'),
+    path('createpost',CustomCreate.as_view({'post':'create'}))
+
+
 ]

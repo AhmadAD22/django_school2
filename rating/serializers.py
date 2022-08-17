@@ -18,7 +18,7 @@ class AddRateSerializer(serializers.ModelSerializer):
                  'communiction_skills','leadership_skills',
                  'team_skills','logical_thinking','critical_thinking',
                  'creative_thinking','proplem_solving','nots'
-                 
+
                  ]
 
 

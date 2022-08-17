@@ -10,14 +10,14 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import authentication, permissions,generics
 from django.contrib.auth.models import User
-from data.models import Student,Teacher
+from data.models import Student,Teacher,Teach,Subject
 from rest_framework.viewsets import ViewSet, ModelViewSet,GenericViewSet
 from .serializers import CraeteUserSerializer, UserSerializer
 
 
 
 class CreateUser(mixins.CreateModelMixin,GenericViewSet):
-    
+
     queryset =User.objects.all()
     serializer_class=CraeteUserSerializer
     def create(self, serializer):
@@ -25,38 +25,46 @@ class CreateUser(mixins.CreateModelMixin,GenericViewSet):
             is_admin=True
         else:
             is_admin=False
-        new_user = User.objects.create(username=self.request.data.get("username"),
+        test_user=User.objects.filter(username=self.request.data.get("username"))
+        if (test_user):
+            return Response(0)
+        else:
+            new_user = User.objects.create(username=self.request.data.get("username"),
                                        first_name=self.request.data.get("first_name"),
                                        last_name=self.request.data.get("last_name"),
                                        email=self.request.data.get("email"),
                                         is_superuser=is_admin,
                                        )
-        new_user.set_password(self.request.data.get("password"))
-        new_teacer=Teacher.objects.create()
-        new_teacer.teacher_user=new_user
-        new_teacer.certification=self.request.data.get("certification")
-        new_teacer.save()
-        new_user.save()
-        return Response(new_user.pk)
-    
-    
+            new_user.set_password(self.request.data.get("password"))
+            new_user.save()
+
+            new_teacer=Teacher.objects.create(teacher_user=new_user)
+            new_teacer.certification=self.request.data.get("b")
+            a=self.request.data.get("a")
+            for i in a:
+                new_teacer.teaching.add(i)
+            new_teacer.save()
+
+            return Response(new_user.pk)
+
+
 class DetaledUserMixins(mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin,
                         mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
                         generics.GenericAPIView):
-    
+
         queryset=User.objects.all()
         serializer_class=UserSerializer
-    
+
         def get (self,request,*args,**kwargs):
              return self.retrieve(request,*args,**kwargs)
         def put (self,request,*args,**kwargs):
              return self.update(request,*args,**kwargs)
         def delete (self,request,*args,**kwargs):
              return self.destroy(request,*args,**kwargs)
-    
-    
+
+
 class ListUsers(APIView):
     """
     View to list all users in the system.
@@ -64,33 +72,29 @@ class ListUsers(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    authentication_classes = [authentication.TokenAuthentication]
+    # authentication_classes = [authentication.TokenAuthentication]
     #permission_classes = [permissions.IsAdminUser]
 
     def get(self, request, format=None):
-        """
-        Return a list of all users.
-        """
-        if request.user.is_superuser:
-            # usernames = [user.username for user in User.objects.all()]
-            return Response("ad")
-    
-        else:
-            # students=[student.last_name for student in Student.objects.all()]
-            return Response('2')
-            
-        
+
+        # Return a list of all users.
+        usernames = [{"username":user.username,"id":user.id,"first_name":user.first_name,"last_name":user.last_name} for user in User.objects.all()]
+        return Response(usernames)
+
+
+
+
 class GetPermission(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     def get(self, request, format=None):
          if request.user.is_superuser:
-            return Response('1')
-    
+            return Response(1)
+
          else:
-            return Response('2')
-    
+            return Response(2)
+
 class CustomAuthToken(ObtainAuthToken):
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
@@ -100,6 +104,5 @@ class CustomAuthToken(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.pk,
-            'email': user.email
+            'username': user.username
         })
-        

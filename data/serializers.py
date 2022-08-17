@@ -20,3 +20,8 @@ class RateSerializer(serializers.ModelSerializer):
     class Meta:
         model =Rate
         fields ='__all__'
+
+class StudentExistsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =Student
+        fields = ['id']
