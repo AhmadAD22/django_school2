@@ -27,17 +27,25 @@ class Rating (GenericViewSet):
         return Response(teachers)
 
 #Show all students studying the subject by its number
-    def liststudent(self,request,pk,pk1):
-
-        students=[{
+    def liststudent(self,request,pk,pk1,mydate):
+        #get All stutents id have rates in this day
+        rates=Rate.objects.filter(subject=pk1,date=mydate)
+        student_id_has_rate=[
+                   rate.student.id 
+                  for rate in rates]
+        students=[
+                   {
                    'sutdent_id':subject.student.id,
                     'sutdent_name':{'first':subject.student.first_name,
                                    'mid':subject.student.mid_name,
                                    'last':subject.student.last_name,
                                    },
                    }
-                  for subject in Learn.objects.filter(subject=pk1)]
+                  for subject in Learn.objects.filter(subject=pk1).exclude(student__in=student_id_has_rate)
+                  ]
         return Response(students)
+
+        
 
 #Get rate by student_id
     def getratebyid(self,request,pk):
